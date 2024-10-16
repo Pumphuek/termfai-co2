@@ -1,8 +1,12 @@
+"use client";
+
+import { useCarbonCreditBuyingContext } from "@/providers/carbon-credit-buying";
 import Image from "next/image";
 
 interface LoginProps {}
 
 export default function Login(props: LoginProps) {
+  const carbonCreditBuyingCtx = useCarbonCreditBuyingContext()!;
   return (
     <main className="w-screen">
       <header className="w-full border-b border-gray-200">
@@ -23,12 +27,20 @@ export default function Login(props: LoginProps) {
           </div>
           <div className="px-4">
             <input
-              className="border rounded-lg border-gray-50 h-[50px] w-full focus:outline-none focus:ring focus:ring-offset-2 focus:ring-primary-300 px-2 py-3"
+              className="border rounded-lg border-gray-50 h-[50px] w-full focus:outline-none focus:ring focus:ring-offset-2 focus:ring-primary-300 px-2 py-3 transition duration-300"
               placeholder="ระบุชื่อ"
+              value={carbonCreditBuyingCtx.buyerName}
+              onChange={(e) => carbonCreditBuyingCtx.setBuyerName(e.target.value)}
             />
           </div>
           <div className="px-4">
-            <button className="rounded-lg bg-primary-500 h-11 text-white w-full">ถัดไป</button>
+            <button
+              disabled={carbonCreditBuyingCtx.buyerName == ""}
+              onClick={carbonCreditBuyingCtx.onLoginClickHandler}
+              className="rounded-lg bg-primary-500 h-11 text-white w-full hover:bg-primary-600 transition duration-300 font-medium active:scale-[0.98] hover:shadow-xl shadow-primary-500 disabled:bg-gray-400 disabled:scale-100 disabled:shadow-none"
+            >
+              ถัดไป
+            </button>
           </div>
         </div>
       </center>
