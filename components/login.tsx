@@ -12,7 +12,7 @@ export default function Login() {
           <h1 className="font-medium">เข้าสู่ระบบ</h1>
         </div>
       </header>
-      <center className="max-w-[375px] mx-auto">
+      <div className="max-w-[375px] mx-auto">
         <div className="flex flex-col gap-12 py-4">
           <div className="flex flex-col gap-4 items-start">
             <div className="p-4">
@@ -41,7 +41,7 @@ export default function Login() {
             </button>
           </div>
         </div>
-      </center>
+      </div>
     </main>
   );
 }
