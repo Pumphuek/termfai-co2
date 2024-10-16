@@ -1,21 +1,12 @@
 "use client";
 
-import { Prisma } from "@prisma/client";
-import axios from "axios";
-import useSWR from "swr";
+import { useCarbonCreditBuyingContext } from "@/providers/carbon-credit-buying";
+import { NumericFormat } from "react-number-format";
 
 export default function Buying() {
-  const { data, error, isLoading } = useSWR<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(
-    "/api/carbon-credit",
-    (url: string) =>
-      axios.get<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(url).then((response) => response.data)
-  );
-
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
-
+  const carbonCreditBuyingCtx = useCarbonCreditBuyingContext()!;
   return (
-    <main className="pt-[168px]">
+    <>
       <header className="fixed top-0 left-0 right-0 h-[134px] w-screen">
         <div className="relative h-full w-full">
           <div className="absolute bg-gradient-to-bl from-primary-500 to-secondary-600 rounded-b-2xl bottom-0 left-0 right-0 top-[-200px]"></div>
@@ -51,36 +42,102 @@ export default function Buying() {
           </div>
         </div>
       </header>
-      <div className="flex flex-col gap-[85px] max-w-[375px] mx-auto py-6 px-4">
-        <div className="flex flex-col gap-6">
-          <div className="flex">
-            <h3 className="font-semibold text-3xl text-gray-900 flex-1">{data && data.length > 0 && data[0].name}</h3>
-            <span className="font-semibold text-2xl text-gray-900">฿ {data && data.length > 0 && data[0].price}</span>
+      <main className="pt-[168px] overflow-scroll h-screen">
+        <div className="flex flex-col gap-[85px] max-w-[375px] mx-auto py-6 px-4">
+          <div className="flex flex-col gap-6">
+            <div className="flex">
+              <h3 className="font-semibold text-3xl text-gray-900 flex-1">
+                {carbonCreditBuyingCtx.carbonCredits &&
+                  carbonCreditBuyingCtx.carbonCredits.length > 0 &&
+                  carbonCreditBuyingCtx.carbonCredits[0].name}
+              </h3>
+              <span className="font-semibold text-2xl text-gray-900">
+                ฿{" "}
+                {carbonCreditBuyingCtx.carbonCredits &&
+                  carbonCreditBuyingCtx.carbonCredits.length > 0 &&
+                  carbonCreditBuyingCtx.carbonCredits[0].price}
+              </span>
+            </div>
+            <div className="rounded-2xl flex flex-col overflow-hidden shadow">
+              <div className="h-14 bg-primary-500 flex justify-center items-center">
+                <h4 className="text-white font-semibold text-lg">Carbon Credit</h4>
+              </div>
+              <div className="grid grid-cols-2 h-12 bg-gray-25">
+                <div className="flex px-4 py-3">
+                  <span className="text-left ">Offer</span>
+                </div>
+                <div className="flex px-4 py-3">
+                  <span className="text-left ">Volumn</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 h-12">
+                <div className="flex px-4 py-3">
+                  <span className="text-left text-success-500">
+                    {carbonCreditBuyingCtx.carbonCredits &&
+                      carbonCreditBuyingCtx.carbonCredits.length > 0 &&
+                      carbonCreditBuyingCtx.carbonCredits[0].price}{" "}
+                    ฿
+                  </span>
+                </div>
+                <div className="flex px-4 py-3">
+                  <span className="text-left ">
+                    {carbonCreditBuyingCtx.carbonCredits &&
+                      carbonCreditBuyingCtx.carbonCredits.length > 0 &&
+                      carbonCreditBuyingCtx.carbonCredits[0].volumn}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="rounded-2xl flex flex-col overflow-hidden shadow">
-            <div className="h-14 bg-primary-500 flex justify-center items-center">
-              <h4 className="text-white font-semibold text-lg">Carbon Credit {error && error}</h4>
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-2 items-center">
+              <span className="text-lg font-medium text-gray-900">จำนวน (tCO2eq)</span>
+              <NumericFormat
+                className="border rounded-lg border-gray-50 h-[50px] focus:outline-none focus:ring focus:ring-offset-2 focus:ring-primary-300 px-2 py-3 transition duration-300"
+                placeholder="ระบุจำนวน"
+                value={carbonCreditBuyingCtx.tCO2Eq ?? ""}
+                onValueChange={(values) => carbonCreditBuyingCtx.onTCO2EqChange(values.floatValue!)}
+                thousandSeparator
+                allowNegative={false}
+                decimalScale={0}
+                isAllowed={(values) =>
+                  values.floatValue == undefined || values.floatValue! <= carbonCreditBuyingCtx.carbonCredits![0].volumn
+                }
+              />
             </div>
-            <div className="grid grid-cols-2 h-12 bg-gray-25">
-              <div className="flex px-4 py-3">
-                <span className="text-left ">Offer</span>
-              </div>
-              <div className="flex px-4 py-3">
-                <span className="text-left ">Volumn</span>
-              </div>
+            <div className="grid grid-cols-2 items-center">
+              <span className="text-lg font-medium text-gray-900">ราคารวม (฿)</span>
+              <NumericFormat
+                className="border rounded-lg border-gray-50 h-[50px] focus:outline-none focus:ring focus:ring-offset-2 focus:ring-primary-300 px-2 py-3 transition duration-300"
+                placeholder="จำนวนเงิน"
+                value={carbonCreditBuyingCtx.amount ?? ""}
+                onValueChange={(values) => carbonCreditBuyingCtx.onAmountChange(values.floatValue!)}
+                thousandSeparator
+                allowNegative={false}
+                decimalScale={0}
+                isAllowed={(values) =>
+                  values.floatValue == undefined ||
+                  values.floatValue! / carbonCreditBuyingCtx.carbonCredits![0].price <=
+                    carbonCreditBuyingCtx.carbonCredits![0].volumn
+                }
+              />
             </div>
-            <div className="grid grid-cols-2 h-12">
-              <div className="flex px-4 py-3">
-                <span className="text-left text-success-500">{data && data.length > 0 && data[0].price} ฿</span>
-              </div>
-              <div className="flex px-4 py-3">
-                <span className="text-left ">{data && data.length > 0 && data[0].volumn}</span>
-              </div>
-            </div>
+            <button
+              disabled={
+                carbonCreditBuyingCtx.tCO2Eq == undefined ||
+                carbonCreditBuyingCtx.amount == undefined ||
+                carbonCreditBuyingCtx.tCO2Eq == null ||
+                carbonCreditBuyingCtx.amount == null ||
+                carbonCreditBuyingCtx.tCO2Eq <= 0 ||
+                carbonCreditBuyingCtx.amount <= 0
+              }
+              className="rounded-lg bg-primary-500 h-11 text-white w-full hover:bg-primary-600 transition duration-300 font-medium active:scale-[0.98] hover:shadow-xl shadow-primary-500 disabled:bg-gray-400 disabled:scale-100 disabled:shadow-none"
+            >
+              ส่งคำสั่งซื้อ
+            </button>
           </div>
         </div>
-        <div></div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

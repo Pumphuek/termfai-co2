@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { PropsWithChildren } from "react";
 
 const variants = {
-  hidden: { opacity: 0, y: 200 },
+  hidden: { opacity: 0, y: 100 },
   enter: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: 200 },
+  exit: { opacity: 0, y: 100 },
 };
 
 export default function PageTransition(props: PropsWithChildren) {
