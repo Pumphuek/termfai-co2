@@ -5,9 +5,15 @@ import axios from "axios";
 import useSWR from "swr";
 
 export default function Buying() {
-  const { data } = useSWR<Prisma.CarbonCreditGetPayload<{ include: null }>[]>("/api/carbon-credit", (url: string) =>
-    axios.get<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(url).then((response) => response.data)
+  const { data, error, isLoading } = useSWR<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(
+    "/api/carbon-credit",
+    (url: string) =>
+      axios.get<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(url).then((response) => response.data)
   );
+
+  if (error) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
+
   return (
     <main className="pt-[168px]">
       <header className="fixed top-0 left-0 right-0 h-[134px] w-screen">
@@ -53,7 +59,7 @@ export default function Buying() {
           </div>
           <div className="rounded-2xl flex flex-col overflow-hidden shadow">
             <div className="h-14 bg-primary-500 flex justify-center items-center">
-              <h4 className="text-white font-semibold text-lg">Carbon Credit</h4>
+              <h4 className="text-white font-semibold text-lg">Carbon Credit {error && error}</h4>
             </div>
             <div className="grid grid-cols-2 h-12 bg-gray-25">
               <div className="flex px-4 py-3">
