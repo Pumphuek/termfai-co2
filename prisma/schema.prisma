@@ -22,6 +22,16 @@ model BuyTransaction {
   transaction_date  DateTime @default(now())
   status            String   @default("PENDING")
   reference_code    String   @unique
+  carbon_credit_id  Int
+  carbonCredit      CarbonCredit  @relation(fields: [carbon_credit_id], references: [id])
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
+}
+
+model CarbonCredit {
+  id                Int      @id @default(autoincrement())
+  name              String
+  price             Int
+  volumn            Int
+  buyTransactions   BuyTransaction[]
 }
