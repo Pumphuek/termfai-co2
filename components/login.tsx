@@ -3,9 +3,7 @@
 import { useCarbonCreditBuyingContext } from "@/providers/carbon-credit-buying";
 import Image from "next/image";
 
-interface LoginProps {}
-
-export default function Login(props: LoginProps) {
+export default function Login() {
   const carbonCreditBuyingCtx = useCarbonCreditBuyingContext()!;
   return (
     <main className="w-screen">
