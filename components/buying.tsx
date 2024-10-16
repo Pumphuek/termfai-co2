@@ -5,8 +5,8 @@ import axios from "axios";
 import useSWR from "swr";
 
 export default function Buying() {
-  const { data, error, isLoading } = useSWR<Prisma.CarbonCreditGetPayload<{}>[]>("/api/carbon-credit", (url: string) =>
-    axios.get<Prisma.CarbonCreditGetPayload<{}>[]>(url).then((response) => response.data)
+  const { data } = useSWR<Prisma.CarbonCreditGetPayload<{ include: null }>[]>("/api/carbon-credit", (url: string) =>
+    axios.get<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(url).then((response) => response.data)
   );
   return (
     <main className="pt-[168px]">
