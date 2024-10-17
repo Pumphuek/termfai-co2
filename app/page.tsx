@@ -2,6 +2,7 @@
 
 import PageTransition from "@/components/animations/page-transition";
 import Buying from "@/components/buying";
+import Cert from "@/components/cert";
 import Login from "@/components/login";
 import Paying from "@/components/paying";
 import PromptPay from "@/components/prompt-pay";
@@ -30,6 +31,11 @@ export default function Home() {
       {carbonCreditBuyingCtx.step == "prompt-pay" && (
         <PageTransition key="prompt-pay">
           <PromptPay />
+        </PageTransition>
+      )}
+      {carbonCreditBuyingCtx.step == "cert" && (
+        <PageTransition key="cert">
+          <Cert />
         </PageTransition>
       )}
     </AnimatePresence>

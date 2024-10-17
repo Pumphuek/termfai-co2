@@ -51,12 +51,14 @@ export default function Buying() {
                   carbonCreditBuyingCtx.carbonCredits.length > 0 &&
                   carbonCreditBuyingCtx.carbonCredits[0].name}
               </h3>
-              <span className="font-semibold text-2xl text-gray-900">
-                ฿{" "}
-                {carbonCreditBuyingCtx.carbonCredits &&
-                  carbonCreditBuyingCtx.carbonCredits.length > 0 &&
-                  carbonCreditBuyingCtx.carbonCredits[0].price}
-              </span>
+              {carbonCreditBuyingCtx.carbonCredits && carbonCreditBuyingCtx.carbonCredits.length > 0 && (
+                <NumericFormat
+                  value={carbonCreditBuyingCtx.carbonCredits[0].price}
+                  displayType="text"
+                  thousandSeparator
+                  renderText={(value) => <span className="font-semibold text-2xl text-gray-900">฿ {value}</span>}
+                />
+              )}
             </div>
             <div className="rounded-2xl flex flex-col overflow-hidden shadow">
               <div className="h-14 bg-primary-500 flex justify-center items-center">
@@ -80,11 +82,14 @@ export default function Buying() {
                   </span>
                 </div>
                 <div className="flex px-4 py-3">
-                  <span className="text-left ">
-                    {carbonCreditBuyingCtx.carbonCredits &&
-                      carbonCreditBuyingCtx.carbonCredits.length > 0 &&
-                      carbonCreditBuyingCtx.carbonCredits[0].volume}
-                  </span>
+                  {carbonCreditBuyingCtx.carbonCredits && carbonCreditBuyingCtx.carbonCredits.length > 0 && (
+                    <NumericFormat
+                      value={carbonCreditBuyingCtx.carbonCredits[0].volume}
+                      displayType="text"
+                      thousandSeparator
+                      renderText={(value) => <span className="text-left">{value}</span>}
+                    />
+                  )}
                 </div>
               </div>
             </div>
