@@ -37,6 +37,8 @@ interface CarbonCreditBuyingContextI {
   onPromptPayClickHandler: () => void;
   qrcodeSrc: any;
   buyTransactionID: string;
+  onTrueMoneyWalletClickHandler: () => void;
+  trueMoneyContent: any;
 }
 
 const CarbonCreditBuyingContext = createContext<CarbonCreditBuyingContextI | null>(null);
@@ -57,6 +59,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   const [paymentRefCode, setPaymentRefCode] = useState<string>("");
   const [qrcodeSrc, setQRCodeSrc] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [trueMoneyContent, setTrueMoneycontent] = useState<any>();
 
   const onLoginClickHandler = () => {
     if (buyerName == "") {
@@ -147,6 +150,62 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       });
   };
 
+  const onTrueMoneyWalletClickHandler = () => {
+    setIsLoading(true);
+    axios
+      .post<any>("/api/carbon-credit/buy/", {
+        amount: amount,
+        tCO2Eq: tCO2Eq,
+        payment_channel: "true-money-wallet",
+        buyer: buyerName,
+        carbon_credit_id: carbonCredits![0].id,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setBuyTransactionID(response.data.id);
+        setPaymentRefCode(response.data.reference_code);
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_PAYMENT_GATEWAY_URL}/api/truemoney-payment/`,
+            {
+              amount: (response.data.amount as number).toFixed(2), // Number (10, 2)
+              referenceNo: response.data.reference_code, // invoice reference ห้ามซ้ำ String (15)
+              backgroundUrl: `${process.env.NEXT_PUBLIC_URL}/api/carbon-credit/buy/${response.data.id}/result/`, //  String (250) After the transaction is completed as a response from the back-end system
+              responseUrl: `${process.env.NEXT_PUBLIC_URL}/`,
+              detail: "Hackathon", // String (250) Product Description
+              customerName: "", // String (100)
+              customerEmail: "", // Email String (100)
+              merchantDefined1: "", // ID Tax (13)
+              merchantDefined2: "", // Branch.(5) (00000 head office, 00001 )
+              merchantDefined3: "", // Address1 90
+              merchantDefined4: "", // Address2 90
+              merchantDefined5: "", // String (250)
+              customerTelephone: "", // Number (10)
+              customerAddress: "", // String (250). note to PUPAPAY
+            },
+            {
+              headers: {
+                Accept: "text/html", // Specify that you expect 'text/html' content
+              },
+              responseType: "text",
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            setTrueMoneycontent(response.data);
+            setStep("true-money-wallet");
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.log(error);
+      });
+  };
+
   const value = useMemo(
     () => ({
       step,
@@ -163,6 +222,8 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       onPromptPayClickHandler,
       qrcodeSrc,
       buyTransactionID,
+      onTrueMoneyWalletClickHandler,
+      trueMoneyContent,
     }),
     [
       step,
@@ -179,6 +240,8 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       onPromptPayClickHandler,
       qrcodeSrc,
       buyTransactionID,
+      onTrueMoneyWalletClickHandler,
+      trueMoneyContent,
     ]
   );
 

@@ -6,6 +6,7 @@ import Cert from "@/components/cert";
 import Login from "@/components/login";
 import Paying from "@/components/paying";
 import PromptPay from "@/components/prompt-pay";
+import TrueMoney from "@/components/true-money";
 import { useCarbonCreditBuyingContext } from "@/providers/carbon-credit-buying";
 import { AnimatePresence } from "framer-motion";
 
@@ -36,6 +37,11 @@ export default function Home() {
       {carbonCreditBuyingCtx.step == "cert" && (
         <PageTransition key="cert">
           <Cert />
+        </PageTransition>
+      )}
+      {carbonCreditBuyingCtx.step == "true-money-wallet" && (
+        <PageTransition key="true-money-wallet">
+          <TrueMoney />
         </PageTransition>
       )}
     </AnimatePresence>

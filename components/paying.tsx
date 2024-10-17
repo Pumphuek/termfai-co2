@@ -46,7 +46,10 @@ export default function Paying() {
             <span className="font-semibold text-sm">คิวอาร์โค้ด PromptPay</span>
             <span className="flex-1 text-end text-gray-500 font-semibold">{">"}</span>
           </button>
-          <button className="flex gap-2 border rounded-lg border-gray-50 h-16 py-3 px-4 items-center disabled:bg-gray-50 disabled:text-gray-500">
+          <button
+            className="flex gap-2 border rounded-lg border-gray-50 h-16 py-3 px-4 items-center disabled:bg-gray-50 disabled:text-gray-500"
+            onClick={carbonCreditBuyingCtx.onTrueMoneyWalletClickHandler}
+          >
             <Image src="/true-money-wallet.png" width={40} height={40} alt="prompt pay" />
             <span className="font-semibold text-sm">True Money Wallet</span>
             <span className="flex-1 text-end text-gray-500 font-semibold">{">"}</span>
