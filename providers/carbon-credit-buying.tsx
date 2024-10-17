@@ -30,6 +30,7 @@ interface CarbonCreditBuyingContextI {
       }[]
     | undefined;
   tCO2Eq: number | undefined;
+  setTCO2Eq: Dispatch<SetStateAction<number | undefined>>;
   onTCO2EqChange: (value: number) => void;
   amount: number | undefined;
   onAmountChange: (value: number) => void;
@@ -216,6 +217,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       onLoginClickHandler,
       carbonCredits,
       tCO2Eq,
+      setTCO2Eq,
       onTCO2EqChange,
       amount,
       onAmountChange,
@@ -235,6 +237,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       onLoginClickHandler,
       carbonCredits,
       tCO2Eq,
+      setTCO2Eq,
       onTCO2EqChange,
       amount,
       onAmountChange,

@@ -17,6 +17,8 @@ export default function TrueMoneyResult() {
   useEffect(() => {
     console.log(data);
     if (!!data && data.status == "SUCCESS") {
+      carbonCreditBuyingCtx.setBuyerName(data.buyer);
+      carbonCreditBuyingCtx.setTCO2Eq(data.tco2eq);
       carbonCreditBuyingCtx.setStep("cert");
     }
   }, [data]);

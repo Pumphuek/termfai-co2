@@ -7,6 +7,7 @@ import Login from "@/components/login";
 import Paying from "@/components/paying";
 import PromptPay from "@/components/prompt-pay";
 import TrueMoney from "@/components/true-money";
+import TrueMoneyResult from "@/components/true-money-result";
 import { useCarbonCreditBuyingContext } from "@/providers/carbon-credit-buying";
 import { AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
@@ -57,6 +58,11 @@ export default function Home() {
         {carbonCreditBuyingCtx.step == "true-money-wallet" && (
           <PageTransition key="true-money-wallet">
             <TrueMoney />
+          </PageTransition>
+        )}
+        {carbonCreditBuyingCtx.step == "true-money-wallet-result" && (
+          <PageTransition key="true-money-wallet-result">
+            <TrueMoneyResult />
           </PageTransition>
         )}
       </AnimatePresence>
