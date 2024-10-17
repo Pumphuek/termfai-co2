@@ -1,9 +1,19 @@
 "use client";
 
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Prisma } from "@prisma/client";
 import axios from "axios";
 import useSWR from "swr";
+import Image from "next/image";
 
 interface CarbonCreditBuyingContextI {
   step: string;
@@ -34,7 +44,7 @@ const CarbonCreditBuyingContext = createContext<CarbonCreditBuyingContextI | nul
 export const useCarbonCreditBuyingContext = () => useContext(CarbonCreditBuyingContext);
 
 const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
-  const { data: carbonCredits } = useSWR<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(
+  const { data: carbonCredits, isLoading: coIsLoading } = useSWR<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(
     "/api/carbon-credit",
     (url: string) =>
       axios.get<Prisma.CarbonCreditGetPayload<{ include: null }>[]>(url).then((response) => response.data)
@@ -46,6 +56,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   const [buyTransactionID, setBuyTransactionID] = useState<string>("");
   const [paymentRefCode, setPaymentRefCode] = useState<string>("");
   const [qrcodeSrc, setQRCodeSrc] = useState<any>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onLoginClickHandler = () => {
     if (buyerName == "") {
@@ -87,6 +98,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   };
 
   const onPromptPayClickHandler = () => {
+    setIsLoading(true);
     axios
       .post<any>("/api/carbon-credit/buy/", {
         amount: amount,
@@ -123,12 +135,14 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
             console.log(response.data);
             setQRCodeSrc(response.data);
             setStep("prompt-pay");
+            setIsLoading(false);
           })
           .catch((error) => {
             console.log(error);
           });
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log(error);
       });
   };
@@ -168,7 +182,22 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
     ]
   );
 
-  return <CarbonCreditBuyingContext.Provider value={value}>{props.children}</CarbonCreditBuyingContext.Provider>;
+  return (
+    <CarbonCreditBuyingContext.Provider value={value}>
+      {props.children}
+      {(coIsLoading || isLoading) && (
+        <div className="fixed top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-opacity-[0.01] backdrop-blur-sm z-50">
+          <Image src="/termfai-logo.png" alt="loading spinner" width={80} height={80} />
+          <div className="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      )}
+    </CarbonCreditBuyingContext.Provider>
+  );
 };
 
 export default CarbonCreditBuyingProvider;
