@@ -1,10 +1,22 @@
 "use client";
 
 import { useCarbonCreditBuyingContext } from "@/providers/carbon-credit-buying";
+import axios from "axios";
 import Image from "next/image";
+import { useEffect } from "react";
+import useSWR from "swr";
 
 export default function PromptPay() {
   const carbonCreditBuyingCtx = useCarbonCreditBuyingContext()!;
+  const { data } = useSWR(`/api/carbon-credit/buy/${carbonCreditBuyingCtx.buyTransactionID}/result/`, (url: string) =>
+    axios.get(url).then((response) => response.data)
+  );
+
+  useEffect(() => {
+    console.log(data);
+    carbonCreditBuyingCtx.setStep("cert");
+  }, [data]);
+
   return (
     <main className="w-screen">
       <header className="w-full border-b border-gray-50">

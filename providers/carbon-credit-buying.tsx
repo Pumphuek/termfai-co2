@@ -7,6 +7,7 @@ import useSWR from "swr";
 
 interface CarbonCreditBuyingContextI {
   step: string;
+  setStep: Dispatch<SetStateAction<string>>;
   buyerName: string;
   setBuyerName: Dispatch<SetStateAction<string>>;
   onLoginClickHandler: () => void;
@@ -25,6 +26,7 @@ interface CarbonCreditBuyingContextI {
   onBuyClickHandler: () => void;
   onPromptPayClickHandler: () => void;
   qrcodeSrc: any;
+  buyTransactionID: string;
 }
 
 const CarbonCreditBuyingContext = createContext<CarbonCreditBuyingContextI | null>(null);
@@ -41,6 +43,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   const [buyerName, setBuyerName] = useState<string>("");
   const [tCO2Eq, setTCO2Eq] = useState<number | undefined>();
   const [amount, setAmount] = useState<number | undefined>();
+  const [buyTransactionID, setBuyTransactionID] = useState<string>("");
   const [paymentRefCode, setPaymentRefCode] = useState<string>("");
   const [qrcodeSrc, setQRCodeSrc] = useState<any>();
 
@@ -94,6 +97,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       })
       .then((response) => {
         console.log(response.data);
+        setBuyTransactionID(response.data.id);
         setPaymentRefCode(response.data.reference_code);
         axios
           .post(
@@ -132,6 +136,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   const value = useMemo(
     () => ({
       step,
+      setStep,
       buyerName,
       setBuyerName,
       onLoginClickHandler,
@@ -143,9 +148,11 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       onBuyClickHandler,
       onPromptPayClickHandler,
       qrcodeSrc,
+      buyTransactionID,
     }),
     [
       step,
+      setStep,
       buyerName,
       setBuyerName,
       onLoginClickHandler,
@@ -157,6 +164,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       onBuyClickHandler,
       onPromptPayClickHandler,
       qrcodeSrc,
+      buyTransactionID,
     ]
   );
 
