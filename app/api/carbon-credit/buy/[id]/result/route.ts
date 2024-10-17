@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest, { parameters }: { parameters: { id: number } }) {
   const body = await request.text();
   const params = new URLSearchParams(body);
-  const parsedBody: { [key: string]: any } = {};
+  const parsedBody: { [key: string]: string } = {};
   params.forEach((value, key) => {
     parsedBody[key] = value;
   });
