@@ -14,7 +14,9 @@ export default function PromptPay() {
 
   useEffect(() => {
     console.log(data);
-    carbonCreditBuyingCtx.setStep("cert");
+    if (data.status == "SUCCESS") {
+      carbonCreditBuyingCtx.setStep("cert");
+    }
   }, [data]);
 
   return (
