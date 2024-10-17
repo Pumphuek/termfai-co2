@@ -67,7 +67,7 @@ export default function Buying() {
                   <span className="text-left ">Offer</span>
                 </div>
                 <div className="flex px-4 py-3">
-                  <span className="text-left ">Volumn</span>
+                  <span className="text-left ">Volume</span>
                 </div>
               </div>
               <div className="grid grid-cols-2 h-12">
@@ -83,7 +83,7 @@ export default function Buying() {
                   <span className="text-left ">
                     {carbonCreditBuyingCtx.carbonCredits &&
                       carbonCreditBuyingCtx.carbonCredits.length > 0 &&
-                      carbonCreditBuyingCtx.carbonCredits[0].volumn}
+                      carbonCreditBuyingCtx.carbonCredits[0].volume}
                   </span>
                 </div>
               </div>
@@ -101,7 +101,7 @@ export default function Buying() {
                 allowNegative={false}
                 decimalScale={0}
                 isAllowed={(values) =>
-                  values.floatValue == undefined || values.floatValue! <= carbonCreditBuyingCtx.carbonCredits![0].volumn
+                  values.floatValue == undefined || values.floatValue! <= carbonCreditBuyingCtx.carbonCredits![0].volume
                 }
               />
             </div>
@@ -118,7 +118,7 @@ export default function Buying() {
                 isAllowed={(values) =>
                   values.floatValue == undefined ||
                   values.floatValue! / carbonCreditBuyingCtx.carbonCredits![0].price <=
-                    carbonCreditBuyingCtx.carbonCredits![0].volumn
+                    carbonCreditBuyingCtx.carbonCredits![0].volume
                 }
               />
             </div>
@@ -131,6 +131,7 @@ export default function Buying() {
                 carbonCreditBuyingCtx.tCO2Eq <= 0 ||
                 carbonCreditBuyingCtx.amount <= 0
               }
+              onClick={carbonCreditBuyingCtx.onBuyClickHandler}
               className="rounded-lg bg-primary-500 h-11 text-white w-full hover:bg-primary-600 transition duration-300 font-medium active:scale-[0.98] hover:shadow-xl shadow-primary-500 disabled:bg-gray-400 disabled:scale-100 disabled:shadow-none"
             >
               ส่งคำสั่งซื้อ

@@ -15,13 +15,16 @@ interface CarbonCreditBuyingContextI {
         name: string;
         id: number;
         price: number;
-        volumn: number;
+        volume: number;
       }[]
     | undefined;
   tCO2Eq: number | undefined;
   onTCO2EqChange: (value: number) => void;
   amount: number | undefined;
   onAmountChange: (value: number) => void;
+  onBuyClickHandler: () => void;
+  onPromptPayClickHandler: () => void;
+  qrcodeSrc: any;
 }
 
 const CarbonCreditBuyingContext = createContext<CarbonCreditBuyingContextI | null>(null);
@@ -38,6 +41,8 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   const [buyerName, setBuyerName] = useState<string>("");
   const [tCO2Eq, setTCO2Eq] = useState<number | undefined>();
   const [amount, setAmount] = useState<number | undefined>();
+  const [paymentRefCode, setPaymentRefCode] = useState<string>("");
+  const [qrcodeSrc, setQRCodeSrc] = useState<any>();
 
   const onLoginClickHandler = () => {
     if (buyerName == "") {
@@ -71,6 +76,59 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
     setAmount(amountN);
   };
 
+  const onBuyClickHandler = () => {
+    if (tCO2Eq == undefined || amount == undefined || tCO2Eq == null || amount == null || tCO2Eq <= 0 || amount <= 0) {
+      return;
+    }
+    setStep("paying");
+  };
+
+  const onPromptPayClickHandler = () => {
+    axios
+      .post<any>("/api/carbon-credit/buy/", {
+        amount: amount,
+        tCO2Eq: tCO2Eq,
+        payment_channel: "prompt-pay",
+        buyer: buyerName,
+        carbon_credit_id: carbonCredits![0].id,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setPaymentRefCode(response.data.reference_code);
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_PAYMENT_GATEWAY_URL}/api/qrcode-payment/`,
+            {
+              amount: response.data.amount, // Number (10, 2)
+              referenceNo: response.data.reference_code, // invoice reference ห้ามซ้ำ String (15)
+              backgroundUrl: `${process.env.NEXT_PUBLIC_URL}/api/carbon-credit/buy/${response.data.id}/result/`, //  String (250) After the transaction is completed as a response from the back-end system
+              detail: "Hackathon", // String (250) Product Description
+              customerName: "", // String (100)
+              customerEmail: "", // Email String (100)
+              merchantDefined1: "", // ID Tax (13)
+              merchantDefined2: "", // Branch.(5) (00000 head office, 00001 )
+              merchantDefined3: "", // Address1 90
+              merchantDefined4: "", // Address2 90
+              merchantDefined5: "", // String (250)
+              customerTelephone: "", // Number (10)
+              customerAddress: "", // String (250). note to PUPAPAY
+            },
+            { responseType: "blob" }
+          )
+          .then((response) => {
+            console.log(response.data);
+            setQRCodeSrc(response.data);
+            setStep("prompt-pay");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const value = useMemo(
     () => ({
       step,
@@ -82,8 +140,24 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       onTCO2EqChange,
       amount,
       onAmountChange,
+      onBuyClickHandler,
+      onPromptPayClickHandler,
+      qrcodeSrc,
     }),
-    [step, buyerName, setBuyerName, onLoginClickHandler, carbonCredits, tCO2Eq, onTCO2EqChange, amount, onAmountChange]
+    [
+      step,
+      buyerName,
+      setBuyerName,
+      onLoginClickHandler,
+      carbonCredits,
+      tCO2Eq,
+      onTCO2EqChange,
+      amount,
+      onAmountChange,
+      onBuyClickHandler,
+      onPromptPayClickHandler,
+      qrcodeSrc,
+    ]
   );
 
   return <CarbonCreditBuyingContext.Provider value={value}>{props.children}</CarbonCreditBuyingContext.Provider>;

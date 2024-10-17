@@ -7,7 +7,7 @@ export default function Login() {
   const carbonCreditBuyingCtx = useCarbonCreditBuyingContext()!;
   return (
     <main className="w-screen">
-      <header className="w-full border-b border-gray-200">
+      <header className="w-full border-b border-gray-100">
         <div className="max-w-[375px] mx-auto flex justify-center items-center h-14">
           <h1 className="font-medium">เข้าสู่ระบบ</h1>
         </div>
