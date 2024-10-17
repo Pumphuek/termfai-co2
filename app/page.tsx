@@ -10,16 +10,24 @@ import TrueMoney from "@/components/true-money";
 import { useCarbonCreditBuyingContext } from "@/providers/carbon-credit-buying";
 import { AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
   const carbonCreditBuyingCtx = useCarbonCreditBuyingContext()!;
   const params = useSearchParams();
-  console.log(params.get("t"));
-  console.log(params.get("b"));
+
+  const type = params.get("t");
+  const buyTransactionID = params.get("b");
+
+  useEffect(() => {
+    if (!!type && !!buyTransactionID && type == "tmw") {
+      carbonCreditBuyingCtx.setBuyTransactionID(buyTransactionID);
+      carbonCreditBuyingCtx.setStep("true-money-wallet-result");
+    }
+  }, [type, buyTransactionID]);
+
   return (
     <>
-      {params.get("t")}
-      {params.get("b")}
       <AnimatePresence mode="wait">
         {carbonCreditBuyingCtx.step == "login" && (
           <PageTransition key="login">

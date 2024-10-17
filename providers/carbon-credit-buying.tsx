@@ -39,6 +39,7 @@ interface CarbonCreditBuyingContextI {
   buyTransactionID: string;
   onTrueMoneyWalletClickHandler: () => void;
   trueMoneyContent: any;
+  setBuyTransactionID: Dispatch<SetStateAction<string>>;
 }
 
 const CarbonCreditBuyingContext = createContext<CarbonCreditBuyingContextI | null>(null);
@@ -171,7 +172,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
               amount: (response.data.amount as number).toFixed(2), // Number (10, 2)
               referenceNo: response.data.reference_code, // invoice reference ห้ามซ้ำ String (15)
               backgroundUrl: `${process.env.NEXT_PUBLIC_URL}/api/carbon-credit/buy/${response.data.id}/result/`, //  String (250) After the transaction is completed as a response from the back-end system
-              responseUrl: `${process.env.NEXT_PUBLIC_URL}/?t=tmw&b=${response.data.id}`,
+              responseUrl: `${process.env.NEXT_PUBLIC_URL}/api/carbon-credit/buy/${response.data.id}/true-money-result/`,
               detail: "Hackathon", // String (250) Product Description
               customerName: "", // String (100)
               customerEmail: "", // Email String (100)
@@ -224,6 +225,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       buyTransactionID,
       onTrueMoneyWalletClickHandler,
       trueMoneyContent,
+      setBuyTransactionID,
     }),
     [
       step,
@@ -242,6 +244,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
       buyTransactionID,
       onTrueMoneyWalletClickHandler,
       trueMoneyContent,
+      setBuyTransactionID,
     ]
   );
 
