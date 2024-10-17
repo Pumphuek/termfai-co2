@@ -254,7 +254,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   return (
     <CarbonCreditBuyingContext.Provider value={value}>
       {props.children}
-      {(coIsLoading || isLoading) && (
+      {((coIsLoading && step != "true-money-wallet-result") || isLoading) && (
         <div className="fixed top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-opacity-[0.01] backdrop-blur-sm z-50">
           <Image src="/termfai-logo.png" alt="loading spinner" width={80} height={80} />
           <div className="lds-ellipsis">
