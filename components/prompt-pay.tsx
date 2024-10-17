@@ -49,7 +49,7 @@ export default function PromptPay() {
         />
         <div className="flex flex-col gap-1">
           <span className="font-medium text-gray-900 text-center">
-            กรุณาบันทึกหน้าจอรูปภาพ เเละนำไปชำระผ่าน Application ของธนาคาร
+            กรุณาบันทึกรูปภาพหน้าจอ เเละนำไปชำระผ่าน Application ของธนาคาร
           </span>
           <span className="text-sm text-gray-500 text-center">
             *เมื่อชำระเงินเล้วเสร็จ ท่านจะได้รับ Carbon Offset Cetificate
