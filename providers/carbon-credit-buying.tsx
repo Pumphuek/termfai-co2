@@ -14,6 +14,7 @@ import { Prisma } from "@prisma/client";
 import axios from "axios";
 import useSWR from "swr";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 interface CarbonCreditBuyingContextI {
   step: string;
@@ -60,6 +61,10 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   const [qrcodeSrc, setQRCodeSrc] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [trueMoneyContent, setTrueMoneycontent] = useState<any>();
+
+  const params = useSearchParams();
+  console.log(params.get("t"));
+  console.log(params.get("b"));
 
   const onLoginClickHandler = () => {
     if (buyerName == "") {
@@ -171,7 +176,7 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
               amount: (response.data.amount as number).toFixed(2), // Number (10, 2)
               referenceNo: response.data.reference_code, // invoice reference ห้ามซ้ำ String (15)
               backgroundUrl: `${process.env.NEXT_PUBLIC_URL}/api/carbon-credit/buy/${response.data.id}/result/`, //  String (250) After the transaction is completed as a response from the back-end system
-              responseUrl: `${process.env.NEXT_PUBLIC_URL}/`,
+              responseUrl: `${process.env.NEXT_PUBLIC_URL}/?t=tmw&b=${response.data.id}`,
               detail: "Hackathon", // String (250) Product Description
               customerName: "", // String (100)
               customerEmail: "", // Email String (100)
