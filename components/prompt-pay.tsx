@@ -10,7 +10,7 @@ import useSWR from "swr";
 export default function PromptPay() {
   const carbonCreditBuyingCtx = useCarbonCreditBuyingContext()!;
   const { data } = useSWR(
-    `/api/carbon-credit/buy/${carbonCreditBuyingCtx.buyTransactionID}/result/`,
+    `/api/carbon-credit/buy/${carbonCreditBuyingCtx.buyTransactionID}/`,
     (url: string) => axios.get(url).then((response) => response.data),
     { refreshInterval: 2000 }
   );
