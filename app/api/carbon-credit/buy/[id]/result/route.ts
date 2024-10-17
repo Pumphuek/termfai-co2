@@ -11,6 +11,8 @@ export async function POST(request: NextRequest, { parameters }: { parameters: {
     parsedBody[key] = value;
   });
 
+  console.log(parsedBody);
+
   const buyTransaction = await prisma.buyTransaction.findUnique({ where: { id: parameters.id } });
 
   if (!buyTransaction) {
