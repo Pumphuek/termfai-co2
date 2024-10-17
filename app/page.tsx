@@ -9,41 +9,49 @@ import PromptPay from "@/components/prompt-pay";
 import TrueMoney from "@/components/true-money";
 import { useCarbonCreditBuyingContext } from "@/providers/carbon-credit-buying";
 import { AnimatePresence } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
   const carbonCreditBuyingCtx = useCarbonCreditBuyingContext()!;
+  const params = useSearchParams();
+  console.log(params.get("t"));
+  console.log(params.get("b"));
   return (
-    <AnimatePresence mode="wait">
-      {carbonCreditBuyingCtx.step == "login" && (
-        <PageTransition key="login">
-          <Login />
-        </PageTransition>
-      )}
-      {carbonCreditBuyingCtx.step == "buying" && (
-        <PageTransition key="buying">
-          <Buying />
-        </PageTransition>
-      )}
-      {carbonCreditBuyingCtx.step == "paying" && (
-        <PageTransition key="paying">
-          <Paying />
-        </PageTransition>
-      )}
-      {carbonCreditBuyingCtx.step == "prompt-pay" && (
-        <PageTransition key="prompt-pay">
-          <PromptPay />
-        </PageTransition>
-      )}
-      {carbonCreditBuyingCtx.step == "cert" && (
-        <PageTransition key="cert">
-          <Cert />
-        </PageTransition>
-      )}
-      {carbonCreditBuyingCtx.step == "true-money-wallet" && (
-        <PageTransition key="true-money-wallet">
-          <TrueMoney />
-        </PageTransition>
-      )}
-    </AnimatePresence>
+    <>
+      {params.get("t")}
+      {params.get("b")}
+      <AnimatePresence mode="wait">
+        {carbonCreditBuyingCtx.step == "login" && (
+          <PageTransition key="login">
+            <Login />
+          </PageTransition>
+        )}
+        {carbonCreditBuyingCtx.step == "buying" && (
+          <PageTransition key="buying">
+            <Buying />
+          </PageTransition>
+        )}
+        {carbonCreditBuyingCtx.step == "paying" && (
+          <PageTransition key="paying">
+            <Paying />
+          </PageTransition>
+        )}
+        {carbonCreditBuyingCtx.step == "prompt-pay" && (
+          <PageTransition key="prompt-pay">
+            <PromptPay />
+          </PageTransition>
+        )}
+        {carbonCreditBuyingCtx.step == "cert" && (
+          <PageTransition key="cert">
+            <Cert />
+          </PageTransition>
+        )}
+        {carbonCreditBuyingCtx.step == "true-money-wallet" && (
+          <PageTransition key="true-money-wallet">
+            <TrueMoney />
+          </PageTransition>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

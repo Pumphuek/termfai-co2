@@ -14,7 +14,6 @@ import { Prisma } from "@prisma/client";
 import axios from "axios";
 import useSWR from "swr";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 
 interface CarbonCreditBuyingContextI {
   step: string;
@@ -61,10 +60,6 @@ const CarbonCreditBuyingProvider = (props: PropsWithChildren) => {
   const [qrcodeSrc, setQRCodeSrc] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [trueMoneyContent, setTrueMoneycontent] = useState<any>();
-
-  const params = useSearchParams();
-  console.log(params.get("t"));
-  console.log(params.get("b"));
 
   const onLoginClickHandler = () => {
     if (buyerName == "") {
