@@ -20,8 +20,8 @@ export default function Buying() {
         {tab == 1 && (
           <SectionTransition key="tab-1">
             <main className="pt-[168px] overflow-scroll h-screen">
-              <div className="max-w-[375px] mx-auto py-6 px-4 flex flex-col items-center">
-                <span className="font-semibold text-center text-secondary-700 text-xl">อยู่ระหว่างการพัฒนา</span>
+              <div className="max-w-[375px] mx-auto py-12 px-4 flex flex-col items-center">
+                <span className="font-semibold text-center text-secondary-700 text-xl">Coming Soon !</span>
               </div>
             </main>
           </SectionTransition>
@@ -29,8 +29,8 @@ export default function Buying() {
         {tab == 2 && (
           <SectionTransition key="tab-2">
             <main className="pt-[168px] overflow-scroll h-screen">
-              <div className="max-w-[375px] mx-auto py-6 px-4 flex flex-col items-center">
-                <span className="font-semibold text-center text-secondary-700 text-xl">อยู่ระหว่างการพัฒนา</span>
+              <div className="max-w-[375px] mx-auto py-12 px-4 flex flex-col items-center">
+                <span className="font-semibold text-center text-secondary-700 text-xl">Coming Soon !</span>
               </div>
             </main>
           </SectionTransition>
