@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest, { parameters }: { parameters: { id: number } }) {
+export async function POST(request: NextRequest, { parameters }: { parameters: { id: string } }) {
   const body = await request.text();
   const params = new URLSearchParams(body);
   const parsedBody: { [key: string]: string } = {};
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest, { parameters }: { parameters: {
 
   console.log(parsedBody);
 
-  const buyTransaction = await prisma.buyTransaction.findUnique({ where: { id: parameters.id } });
+  const buyTransaction = await prisma.buyTransaction.findUnique({ where: { id: Number(parameters.id) } });
 
   if (!buyTransaction) {
     console.log("Not found buy transaction id.");
@@ -32,10 +32,10 @@ export async function POST(request: NextRequest, { parameters }: { parameters: {
 
   if (parsedBody.resultCode != "00") {
     console.log("Transaction fail.");
-    await prisma.buyTransaction.update({ where: { id: parameters.id }, data: { status: "FAIL" } });
+    await prisma.buyTransaction.update({ where: { id: Number(parameters.id) }, data: { status: "FAIL" } });
     return NextResponse.json({ message: "Updated success." });
   }
 
-  await prisma.buyTransaction.update({ where: { id: parameters.id }, data: { status: "SUCCESS" } });
+  await prisma.buyTransaction.update({ where: { id: Number(parameters.id) }, data: { status: "SUCCESS" } });
   return NextResponse.json({ message: "Updated success." });
 }
